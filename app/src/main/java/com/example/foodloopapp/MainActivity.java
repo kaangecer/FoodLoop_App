@@ -1,31 +1,22 @@
 package com.example.foodloopapp;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private BottomNavigationView bottomNav;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
-
-        if (savedInstanceState == null) {
-            loadFragment(new HomeFragment());
-        }
+        bottomNav = findViewById(R.id.bottom_nav);
 
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selected = null;
@@ -36,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_products) {
                 selected = new ProductsFragment();
             } else if (id == R.id.nav_producers) {
-                selected = new ProducersFragment();
+                selected = new ProducerFragment();
             } else if (id == R.id.nav_maps) {
                 selected = new MapsFragment();
             } else if (id == R.id.nav_cart) {
@@ -44,17 +35,33 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (selected != null) {
-                loadFragment(selected);
-                return true;
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, selected)
+                        .commit();
             }
-            return false;
+            return true;
         });
+
+
+        // Show Home on first start
+        if (savedInstanceState == null) {
+            bottomNav.setSelectedItemId(R.id.nav_home);
+        }
     }
-    private void loadFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.nav_host_container, fragment)
-                .commit();
+    public void navigateTo(int menuItemId) {
+        if (bottomNav != null) {
+            bottomNav.setSelectedItemId(menuItemId);  // behaves like a user tap
+        }
     }
 
+    public void openProducerFromMap(long producerId) {
+        bottomNav.setSelectedItemId(R.id.nav_producers);
+
+        ProducerFragment profileFragment = ProducerFragment.newInstance(producerId);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, profileFragment)
+                .addToBackStack(null)
+                .commit();
+    }
 }
