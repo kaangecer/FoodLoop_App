@@ -16,6 +16,20 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
+        <Button
+            android:id="@+id/btnBrowseProducts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Browse products" />
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Login / Sign up"
+            android:layout_marginTop="8dp" />
+
+
         <!-- Later: marketing copy, CTA buttons (e.g. Go to Products, Login) -->
     </LinearLayout>
 </ScrollView>
