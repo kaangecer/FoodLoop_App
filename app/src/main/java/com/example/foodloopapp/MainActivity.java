@@ -55,9 +55,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openProducerFromMap(long producerId) {
-        bottomNav.setSelectedItemId(R.id.nav_producers);
-
-        ProducerFragment profileFragment = ProducerFragment.newInstance(producerId);
+        ProducerProfileFragment profileFragment = ProducerProfileFragment.newInstance(producerId);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, profileFragment)
