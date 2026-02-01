@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="foodloop_green">#184A31</color>
+    <color name="foodloop_yellow">#F2D16B</color>
+    <color name="foodloop_yellow_dark">#E5C15C</color>
+    <color name="foodloop_text_dark">#1A1A1A</color>
+    <color name="foodloop_white_soft">#EAF6EE</color>
+
 </resources>
