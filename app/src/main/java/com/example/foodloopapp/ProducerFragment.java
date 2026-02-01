@@ -1,62 +1,56 @@
 package com.example.foodloopapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
-public class ProducerFragment extends Fragment {
+import java.util.ArrayList;
+import java.util.List;
 
-    private static final String ARG_PRODUCER_ID = "producer_id";
+public class ProducerFragment extends BaseFragment {
 
-    public static ProducerFragment newInstance(long producerId) {
-        ProducerFragment fragment = new ProducerFragment();
-        Bundle args = new Bundle();
-        args.putLong(ARG_PRODUCER_ID, producerId);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private static final String TAG = "ProducerFragment";
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_producer, container, false);
 
-        long producerId = -1;
-        if (getArguments() != null) {
-            producerId = getArguments().getLong(ARG_PRODUCER_ID, -1);
+        View root = inflater.inflate(R.layout.fragment_producer, container, false);
+
+        RecyclerView rv = root.findViewById(R.id.rvProducers);
+
+        if (rv == null) {
+            Log.e(TAG, "RecyclerView with ID R.id.rvProducers not found in layout.");
+            return root; // Early return to prevent NullPointerException
         }
 
-        TextView title = view.findViewById(R.id.producer_title);
-        TextView details = view.findViewById(R.id.producer_details);
+        List<Producer> demo = new ArrayList<>();
+        demo.add(new Producer(1L, "Hof Müller", 47.3769, 8.5417));
+        demo.add(new Producer(2L, "Biohof Schmidt", 46.9480, 7.4474));
+        demo.add(new Producer(3L, "Kartoffelhof Meyer", 47.5596, 7.5886));
 
-        String name;
-        String description;
+        rv.setAdapter(new ProducersAdapter(demo, producerId -> {
+            if (!isAdded()) {
+                Log.w(TAG, "Fragment not attached, cannot perform transaction.");
+                return;
+            }
+            ProducerProfileFragment profile = ProducerProfileFragment.newInstance(producerId);
 
-        if (producerId == 1L) {
-            name = "Hof Müller";
-            description = "Regionaler Bauernhof mit frischem Obst und Gemüse.";
-        } else if (producerId == 2L) {
-            name = "Biohof Schmidt";
-            description = "Zertifizierter Biohof mit Milchprodukten und Eiern.";
-        } else if (producerId == 3L) {
-            name = "Kartoffelhof Meyer";
-            description = "Kartoffeln, Wurzelgemüse und saisonale Produkte.";
-        } else {
-            name = "Unbekannter Produzent (" + producerId + ")";
-            description = "Beispieldaten, später aus der Datenbank laden.";
-        }
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, profile) // Container-ID für den Fragmentwechsel
+                    .addToBackStack(null)
+                    .commit();
+        }));
 
-        title.setText(name);
-        details.setText(description);
-
-        return view;
+        return root;
     }
 }
