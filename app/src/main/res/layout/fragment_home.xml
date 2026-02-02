@@ -1,35 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:fillViewport="true"
+    android:background="@color/foodloop_green">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
+        <!-- Überschrift -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="FoodLoop - Home"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:text="FoodLoop"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:layout_marginBottom="18dp" />
 
-        <Button
+        <!-- Banner (gleiche Farbe wie Hintergrund) -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/homeBannerCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="22dp"
+            app:cardCornerRadius="22dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/foodloop_green">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp">
+
+                <!-- Titel -->
+                <TextView
+                    android:id="@+id/homeBannerTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/home_banner_title"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:gravity="center"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <!-- Beschreibung -->
+                <TextView
+                    android:id="@+id/homeBannerText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/home_banner_text"
+                    android:textSize="16sp"
+                    android:lineSpacingExtra="2dp"
+                    android:textColor="@color/foodloop_white_soft"
+                    android:gravity="center"
+                    app:layout_constraintTop_toBottomOf="@id/homeBannerTitle"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintWidth_max="500dp" />
+
+                <!-- Stats -->
+                <LinearLayout
+                    android:id="@+id/homeStatsRow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    app:layout_constraintTop_toBottomOf="@id/homeBannerText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <!-- Produzenten -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_stat_producers_value"
+                            android:textStyle="bold"
+                            android:textSize="26sp"
+                            android:textColor="@color/foodloop_yellow" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_stat_producers_label"
+                            android:textSize="13sp"
+                            android:textColor="@color/foodloop_white_soft" />
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="6dp"
+                        android:layout_height="42dp"
+                        android:layout_marginHorizontal="12dp"
+                        android:background="#2E6B55" />
+
+                    <!-- Produkte -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_stat_products_value"
+                            android:textStyle="bold"
+                            android:textSize="26sp"
+                            android:textColor="@color/foodloop_yellow" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_stat_products_label"
+                            android:textSize="13sp"
+                            android:textColor="@color/foodloop_white_soft" />
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="42dp"
+                        android:layout_marginHorizontal="12dp"
+                        android:background="#2E6B55" />
+
+                    <!-- Regional -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_stat_regional_value"
+                            android:textStyle="bold"
+                            android:textSize="26sp"
+                            android:textColor="@color/foodloop_yellow" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/home_stat_regional_label"
+                            android:textSize="13sp"
+                            android:textColor="@color/foodloop_white_soft" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Buttons: Gelb, runde Ecken, Text dunkel -->
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnBrowseProducts"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Browse products" />
+            android:layout_width="wrap_content"
+            android:layout_height="54dp"
+            android:text="Browse products"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/foodloop_text_dark"
+            app:backgroundTint="@color/foodloop_yellow"
+            app:cornerRadius="18dp"
+            app:rippleColor="@color/foodloop_yellow_dark" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_height="54dp"
+            android:layout_marginTop="12dp"
             android:text="Login / Sign up"
-            android:layout_marginTop="8dp" />
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/foodloop_text_dark"
+            app:backgroundTint="@color/foodloop_yellow"
+            app:cornerRadius="18dp"
+            app:rippleColor="@color/foodloop_yellow_dark" />
 
-
-        <!-- Later: marketing copy, CTA buttons (e.g. Go to Products, Login) -->
     </LinearLayout>
 </ScrollView>
