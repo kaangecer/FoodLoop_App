@@ -47,5 +47,19 @@
     <string name="adapter_unknown_region">Unbekannt</string>
     <string name="adapter_unknown_assortment">—</string>
     <string name="adapter_unknown_pickup">—</string>
+    <string name="products_title">Produkte</string>
+
+    <!-- Homepage -->
+    <string name="home_banner_title">Direkt vom Feld auf deinen Tisch</string>
+    <string name="home_banner_text">FoodLoop verbindet Bauernhöfe, Hofläden und Hobbygärtner mit Menschen vor Ort – frisch, transparent und ohne Zwischenhändler.</string>
+
+    <string name="home_stat_producers_value">50+</string>
+    <string name="home_stat_producers_label">Produzenten</string>
+
+    <string name="home_stat_products_value">200+</string>
+    <string name="home_stat_products_label">Produkte</string>
+
+    <string name="home_stat_regional_value">100%</string>
+    <string name="home_stat_regional_label">Regional</string>
 
 </resources>
