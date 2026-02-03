@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,6 +26,7 @@ public class ProductFragment extends Fragment {
 
     private final List<Product> products = new ArrayList<>();
     private ProductAdapter adapter;
+    private RecyclerView rv;
 
     @Nullable
     @Override
@@ -34,7 +36,8 @@ public class ProductFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_products, container, false);
 
-        RecyclerView rv = root.findViewById(R.id.rvProducts);
+        rv = root.findViewById(R.id.rvProducts);
+        rv.setLayoutManager(new LinearLayoutManager(getContext()));
 
         adapter = new ProductAdapter(products, this::openProductDetail);
         rv.setAdapter(adapter);
@@ -56,7 +59,11 @@ public class ProductFragment extends Fragment {
                             products.add(p);
                         }
                     }
-                    adapter.notifyDataSetChanged();
+                    if (adapter != null) {
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        Log.e(TAG, "Adapter is null in loadProductsFromFirestore");
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Failed to load products", e);
