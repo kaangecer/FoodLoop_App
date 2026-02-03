@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-public class ProducerProfileFragment extends BaseFragment {
+public class ProducerProfileFragment extends Fragment {
 
     private static final String ARG_PRODUCER_ID = "producer_id";
 
