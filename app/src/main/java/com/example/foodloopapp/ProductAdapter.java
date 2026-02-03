@@ -10,19 +10,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.VH> {
+public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.VH> {
+
+    public interface OnProductClick {
+        void onProductClick(Product product);
+    }
 
     private final List<Product> items;
+    private final OnProductClick listener;
 
-    public ProductsAdapter(List<Product> items) {
+    public ProductAdapter(List<Product> items, OnProductClick listener) {
         this.items = items;
+        this.listener = listener;
     }
 
     public static class VH extends RecyclerView.ViewHolder {
         TextView tvName, tvPrice;
+        View root;
 
         VH(@NonNull View itemView) {
             super(itemView);
+            root = itemView;
             tvName = itemView.findViewById(R.id.tvName);
             tvPrice = itemView.findViewById(R.id.tvPrice);
         }
@@ -39,8 +47,14 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.VH> {
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
         Product p = items.get(position);
-        holder.tvName.setText(p.name);
-        holder.tvPrice.setText(p.price);
+        holder.tvName.setText(p.getName());
+        holder.tvPrice.setText(p.getPricePerUnit());
+
+        holder.root.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onProductClick(p);
+            }
+        });
     }
 
     @Override
