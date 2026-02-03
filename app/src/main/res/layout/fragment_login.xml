@@ -1,166 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/loginRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp"
-    android:background="?android:colorBackground"
-    tools:context=".LoginFragment">
+    android:fillViewport="true">
 
-    <!-- Top welcome section -->
-    <ImageView
-        android:id="@+id/imgLogo"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:src="@mipmap/ic_launcher"
-        android:contentDescription="@string/app_name"
-        app:tint="?attr/colorPrimary"
-        android:layout_marginTop="32dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/txtTitle"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loginRoot"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome back"
-        android:textAppearance="?attr/textAppearanceHeadline5"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/imgLogo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:padding="24dp"
+        android:background="?android:colorBackground"
+        tools:context=".LoginFragment">
 
-    <TextView
-        android:id="@+id/txtSubtitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Sign in or create an account with your email."
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:gravity="center"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/txtTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <!-- Top welcome section -->
+        <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@mipmap/ic_launcher"
+            android:contentDescription="@string/app_name"
+            app:tint="?attr/colorPrimary"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Email field (step 1, always visible) -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/inputLayoutEmail"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:hint="Email address"
-        app:endIconMode="clear_text"
-        app:boxStrokeColor="?attr/colorPrimary"
-        app:layout_constraintTop_toBottomOf="@id/txtSubtitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edtEmail"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:imeOptions="actionDone" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:text="Welcome back"
+            android:textAppearance="?attr/textAppearanceHeadline5"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/imgLogo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Primary button: continue with email -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnContinueEmail"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Continue"
-        android:textAllCaps="false"
-        app:cornerRadius="24dp"
-        app:iconGravity="textStart"
-        app:layout_constraintTop_toBottomOf="@id/inputLayoutEmail"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <TextView
+            android:id="@+id/txtSubtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Sign in or create an account with your email."
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/txtTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Step 2 container (password OR signup CTA), initially hidden -->
-    <LinearLayout
-        android:id="@+id/containerStep2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/btnContinueEmail"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- Shown if email already has an account: password login -->
+        <!-- Email field (step 1, always visible) -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputLayoutPassword"
+            android:id="@+id/inputLayoutEmail"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Password"
-            app:endIconMode="password_toggle">
+            android:layout_marginTop="32dp"
+            android:hint="Email address"
+            app:endIconMode="clear_text"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:layout_constraintTop_toBottomOf="@id/txtSubtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtPassword"
+                android:id="@+id/edtEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
+                android:inputType="textEmailAddress"
                 android:imeOptions="actionDone" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/txtForgotPassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Forgot password?"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorPrimary"
-            android:layout_marginTop="8dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLogin"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Login"
-            android:textAllCaps="false"
-            app:cornerRadius="24dp" />
-
-        <!-- Shown if email is new: sign up CTA -->
-        <TextView
-            android:id="@+id/txtNewAccountInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="No account yet? Create one with this email."
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="24dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSignUp"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Sign up"
-            android:textAllCaps="false"
-            app:cornerRadius="24dp" />
-
-        <!-- Sign-up detail section (initially hidden, same flow) -->
+        <!-- Sign-up detail section (initially hidden), between email and Continue -->
         <LinearLayout
             android:id="@+id/containerSignUpDetails"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginTop="16dp"
-            android:visibility="gone">
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/inputLayoutEmail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
                 android:id="@+id/txtSignUpTitle"
@@ -230,32 +155,117 @@
                 android:textAllCaps="false"
                 app:cornerRadius="24dp" />
         </LinearLayout>
-    </LinearLayout>
 
-    <!-- Optional: social login divider -->
-    <TextView
-        android:id="@+id/txtOrDivider"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="OR"
-        android:gravity="center"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/containerStep2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <!-- Primary button: continue with email -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnContinueEmail"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Continue"
+            android:textAllCaps="false"
+            app:cornerRadius="24dp"
+            app:iconGravity="textStart"
+            app:layout_constraintTop_toBottomOf="@id/containerSignUpDetails"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Optional: “Continue with Google/Apple” later -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnGoogle"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Continue with Google"
-        android:textAllCaps="false"
-        app:cornerRadius="24dp"
-        app:layout_constraintTop_toBottomOf="@id/txtOrDivider"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <!-- Step 2 container (password OR signup CTA), initially hidden -->
+        <LinearLayout
+            android:id="@+id/containerStep2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/btnContinueEmail"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <!-- Shown if email already has an account: password login -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/inputLayoutPassword"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                app:endIconMode="password_toggle">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:imeOptions="actionDone" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/txtForgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Forgot password?"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="?attr/colorPrimary"
+                android:layout_marginTop="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogin"
+                style="@style/Widget.MaterialComponents.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Login"
+                android:textAllCaps="false"
+                app:cornerRadius="24dp" />
+
+            <!-- Shown if email is new: sign up CTA -->
+            <TextView
+                android:id="@+id/txtNewAccountInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No account yet? Create one with this email."
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="24dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSignUp"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Sign up"
+                android:textAllCaps="false"
+                app:cornerRadius="24dp" />
+
+        </LinearLayout>
+
+        <!-- Optional: social login divider -->
+        <TextView
+            android:id="@+id/txtOrDivider"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="OR"
+            android:gravity="center"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/containerStep2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Optional: “Continue with Google/Apple” later -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGoogle"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Continue with Google"
+            android:textAllCaps="false"
+            app:cornerRadius="24dp"
+            app:layout_constraintTop_toBottomOf="@id/txtOrDivider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
