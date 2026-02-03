@@ -14,12 +14,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.foodloopapp.model.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.example.foodloopapp.R;          // <-- adjust package
-import com.google.android.material.button.MaterialButton;
-
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginFragment extends Fragment {
 
@@ -34,6 +38,8 @@ public class LoginFragment extends Fragment {
     private MaterialButton btnLogin;
     private TextView txtNewAccountInfo;
     private MaterialButton btnSignUp;
+
+    // Inline sign-up section (between email and Continue)
     private LinearLayout containerSignUpDetails;
     private TextInputLayout inputLayoutName;
     private TextInputEditText edtName;
@@ -45,11 +51,8 @@ public class LoginFragment extends Fragment {
 
     private MaterialButton btnGoogle;
 
-    // Fake: in a real app you would query backend to see if email exists
-    private boolean isExistingUser(String email) {
-        // Demo rule: emails ending with "example.com" are treated as existing users
-        return email != null && email.endsWith("@example.com");
-    }
+    private FirebaseAuth auth;
+    private FirebaseFirestore db;
 
     @Nullable
     @Override
@@ -64,6 +67,9 @@ public class LoginFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
         // Bind views
         inputLayoutEmail = view.findViewById(R.id.inputLayoutEmail);
         edtEmail = view.findViewById(R.id.edtEmail);
@@ -76,9 +82,7 @@ public class LoginFragment extends Fragment {
         btnLogin = view.findViewById(R.id.btnLogin);
         txtNewAccountInfo = view.findViewById(R.id.txtNewAccountInfo);
         btnSignUp = view.findViewById(R.id.btnSignUp);
-        btnGoogle = view.findViewById(R.id.btnGoogle);
 
-        // Sign-up detail views
         containerSignUpDetails = view.findViewById(R.id.containerSignUpDetails);
         inputLayoutName = view.findViewById(R.id.inputLayoutName);
         edtName = view.findViewById(R.id.edtName);
@@ -87,6 +91,8 @@ public class LoginFragment extends Fragment {
         inputLayoutSignUpPasswordConfirm = view.findViewById(R.id.inputLayoutSignUpPasswordConfirm);
         edtSignUpPasswordConfirm = view.findViewById(R.id.edtSignUpPasswordConfirm);
         btnConfirmSignUp = view.findViewById(R.id.btnConfirmSignUp);
+
+        btnGoogle = view.findViewById(R.id.btnGoogle);
 
         setupListeners();
     }
@@ -100,9 +106,8 @@ public class LoginFragment extends Fragment {
         btnGoogle.setOnClickListener(v -> handleGoogle());
     }
 
+    // Step 1: user taps "Continue" after entering email
     private void handleContinueWithEmail() {
-        Toast.makeText(getContext(), "Continue clicked", Toast.LENGTH_SHORT).show();  // debug
-
         String email = edtEmail.getText() != null ? edtEmail.getText().toString().trim() : "";
 
         if (!isValidEmail(email)) {
@@ -112,9 +117,24 @@ public class LoginFragment extends Fragment {
             inputLayoutEmail.setError(null);
         }
 
-        // Decide which UI to show in step 2
-        boolean existing = isExistingUser(email);
-        showStep2(existing);
+        // Check if this email already has a Firebase account
+        auth.fetchSignInMethodsForEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(getContext(),
+                                "Could not check account: " +
+                                        (task.getException() != null ? task.getException().getMessage() : ""),
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    boolean existingUser =
+                            task.getResult() != null &&
+                                    task.getResult().getSignInMethods() != null &&
+                                    !task.getResult().getSignInMethods().isEmpty();
+
+                    showStep2(existingUser);
+                });
     }
 
     private boolean isValidEmail(String email) {
@@ -122,10 +142,11 @@ public class LoginFragment extends Fragment {
     }
 
     /**
-     * Show password login or sign up content depending on whether this is an existing user.
+     * Show password login or sign up CTA depending on whether this is an existing user.
      */
     private void showStep2(boolean existingUser) {
         containerStep2.setVisibility(View.VISIBLE);
+        containerSignUpDetails.setVisibility(View.GONE); // hidden until user taps "Sign up"
 
         if (existingUser) {
             // Show password login UI
@@ -133,7 +154,7 @@ public class LoginFragment extends Fragment {
             txtForgotPassword.setVisibility(View.VISIBLE);
             btnLogin.setVisibility(View.VISIBLE);
 
-            // Hide signup‑only bits
+            // Hide signup-only bits
             txtNewAccountInfo.setVisibility(View.GONE);
             btnSignUp.setVisibility(View.GONE);
 
@@ -146,7 +167,7 @@ public class LoginFragment extends Fragment {
             txtForgotPassword.setVisibility(View.GONE);
             btnLogin.setVisibility(View.GONE);
 
-            // Show signup UI
+            // Show signup UI CTA
             txtNewAccountInfo.setVisibility(View.VISIBLE);
             btnSignUp.setVisibility(View.VISIBLE);
 
@@ -156,6 +177,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    // Existing user logs in
     private void handleLogin() {
         String email = edtEmail.getText() != null ? edtEmail.getText().toString().trim() : "";
         String password = edtPassword.getText() != null ? edtPassword.getText().toString() : "";
@@ -174,12 +196,29 @@ public class LoginFragment extends Fragment {
             inputLayoutPassword.setError(null);
         }
 
-        // TODO: call your real login API here
-        Toast.makeText(getContext(),
-                "Logging in… (fake for now)",
-                Toast.LENGTH_SHORT).show();
+        btnLogin.setEnabled(false);
+
+        auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    btnLogin.setEnabled(true);
+
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(getContext(),
+                                "Login failed: " +
+                                        (task.getException() != null ? task.getException().getMessage() : ""),
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    Toast.makeText(getContext(),
+                            "Logged in!",
+                            Toast.LENGTH_SHORT).show();
+
+                    goToHome();
+                });
     }
 
+    // User taps "Sign up" CTA under step 2
     private void handleSignUp() {
         String email = edtEmail.getText() != null ? edtEmail.getText().toString().trim() : "";
 
@@ -189,19 +228,17 @@ public class LoginFragment extends Fragment {
         } else {
             inputLayoutEmail.setError(null);
         }
+
+        // Show inline sign-up fields between email and Continue
         containerSignUpDetails.setVisibility(View.VISIBLE);
 
-        // Optional: Login-spezifische UI ausblenden, damit es übersichtlich bleibt
+        // Optional: hide password login bits to keep UI clean
         inputLayoutPassword.setVisibility(View.GONE);
         txtForgotPassword.setVisibility(View.GONE);
         btnLogin.setVisibility(View.GONE);
-
-
-        // TODO: navigate to sign‑up details screen or call signup API
-        Toast.makeText(getContext(),
-                "Starting sign‑up for " + email,
-                Toast.LENGTH_SHORT).show();
     }
+
+    // User taps "Create account"
     private void handleConfirmSignUp() {
         String email = edtEmail.getText() != null ? edtEmail.getText().toString().trim() : "";
         String name = edtName.getText() != null ? edtName.getText().toString().trim() : "";
@@ -245,13 +282,48 @@ public class LoginFragment extends Fragment {
             return;
         }
 
-        // TODO: hier echte Sign-up Logik / API Call einbauen
-        Toast.makeText(getContext(),
-                "Creating account for " + email,
-                Toast.LENGTH_SHORT).show();
+        btnConfirmSignUp.setEnabled(false);
 
-        // Optional: nach erfolgreichem Sign-up direkt in Login-Flow wechseln
-        // oder Navigation zum Home-Screen.
+        auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    btnConfirmSignUp.setEnabled(true);
+
+                    if (!task.isSuccessful() || task.getResult() == null) {
+                        Toast.makeText(getContext(),
+                                "Sign-up failed: " +
+                                        (task.getException() != null ? task.getException().getMessage() : ""),
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    FirebaseUser firebaseUser = task.getResult().getUser();
+                    if (firebaseUser == null) {
+                        Toast.makeText(getContext(),
+                                "Sign-up failed: no user returned",
+                                Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    String uid = firebaseUser.getUid();
+                    long now = System.currentTimeMillis();
+
+                    User user = new User(uid, email, name, now);
+
+                    db.collection("users")
+                            .document(uid)
+                            .set(user)
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getContext(),
+                                        "Account created!",
+                                        Toast.LENGTH_SHORT).show();
+                                goToHome();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(getContext(),
+                                        "Profile save failed: " + e.getMessage(),
+                                        Toast.LENGTH_LONG).show();
+                            });
+                });
     }
 
     private void handleForgotPassword() {
@@ -264,16 +336,31 @@ public class LoginFragment extends Fragment {
             return;
         }
 
-        // TODO: trigger password reset flow
-        Toast.makeText(getContext(),
-                "Password reset link would be sent to " + email,
-                Toast.LENGTH_SHORT).show();
+        auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getContext(),
+                                "Reset link sent to " + email,
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(),
+                                "Failed to send reset link.",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void handleGoogle() {
-        // TODO: plug in your Google sign‑in here
+        // TODO: plug in your Google sign-in here
         Toast.makeText(getContext(),
-                "Google sign‑in not implemented yet",
+                "Google sign-in not implemented yet",
                 Toast.LENGTH_SHORT).show();
+    }
+
+    private void goToHome() {
+        if (getActivity() instanceof MainActivity) {
+            MainActivity main = (MainActivity) getActivity();
+            main.navigateTo(R.id.nav_home);
+        }
     }
 }
