@@ -15,10 +15,10 @@ public class ProducerProfileFragment extends Fragment {
 
     private static final String ARG_PRODUCER_ID = "producer_id";
 
-    public static ProducerProfileFragment newInstance(long producerId) {
+    public static ProducerProfileFragment newInstance(String producerId) {
         ProducerProfileFragment fragment = new ProducerProfileFragment();
         Bundle args = new Bundle();
-        args.putLong(ARG_PRODUCER_ID, producerId);
+        args.putString(ARG_PRODUCER_ID, producerId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -31,9 +31,9 @@ public class ProducerProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_producer_profile, container, false);
 
-        long producerId = -1L;
+        String producerId = null;
         if (getArguments() != null) {
-            producerId = getArguments().getLong(ARG_PRODUCER_ID, -1L);
+            producerId = getArguments().getString(ARG_PRODUCER_ID, null);
         }
 
         TextView title = view.findViewById(R.id.producer_profile_title);

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void openProducerFromMap(long producerId) {
+    public void openProducerFromMap(String producerId) {
         ProducerProfileFragment profileFragment = ProducerProfileFragment.newInstance(producerId);
 
         getSupportFragmentManager().beginTransaction()

@@ -17,6 +17,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +37,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
 
-        loadDummyProducers();
+        loadProducersFromFirestore();
 
         SupportMapFragment mapFragment =
                 (SupportMapFragment) getChildFragmentManager()
@@ -68,15 +72,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         mMap.setOnMarkerClickListener(marker -> {
             Object tag = marker.getTag();
-            if (tag instanceof Long) {
-                long producerId = (Long) tag;
+            if (tag instanceof String) {
+                String producerId = (String) tag;
                 navigateToProducerProfile(producerId);
             }
             return true; // we handled the click
         });
     }
 
-    private void navigateToProducerProfile(long producerId) {
+    private void navigateToProducerProfile(String producerId) {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).openProducerFromMap(producerId);
         }
@@ -88,4 +92,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         producers.add(new Producer(2L, "Biohof Schmidt", 52.4500, 13.3000));
         producers.add(new Producer(3L, "Kartoffelhof Meyer", 52.5500, 13.3500));
     }
+    private void addMarkers() {
+        if (mMap == null) return;
+
+        mMap.clear();
+        for (Producer p : producers) {
+            LatLng pos = new LatLng(p.getLat(), p.getLng());
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(pos)
+                    .title(p.getName()));
+            if (marker != null) {
+                marker.setTag(p.getId());  // Firestore id (String)
+            }
+        }
+
+        if (!producers.isEmpty()) {
+            Producer first = producers.get(0);
+            LatLng pos = new LatLng(first.getLat(), first.getLng());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 10f));
+        }
+    }
+
 }
