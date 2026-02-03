@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">FoodLoop App</string>
     <string name="google_maps_key">AIzaSyDtHhokNZoy6kcDxZep-QkeLP5-7ffSqx0</string>
+
+    <!-- Producer profile labels -->
     <string name="producer_profile_title">Produzent</string>
     <string name="producer_profile_region">Ort/Region:</string>
     <string name="producer_profile_assortment">Sortiment:</string>
@@ -12,42 +14,20 @@
     <string name="producer_pickup_times_label">Abholzeiten</string>
     <string name="producer_profile_button">Profil</string>
 
-    <!-- Producer 1: Hof Müller -->
-    <string name="hof_mueller_name">Hof Müller</string>
-    <string name="hof_mueller_region">Ort/Region: Zürich, Schweiz</string>
-    <string name="hof_mueller_assortment">Sortiment: Obst &amp; Gemüse</string>
-    <string name="hof_mueller_pickup">Abholzeiten: Mo–Fr 08–18 Uhr</string>
-    <string name="hof_mueller_about">Über uns: Regionaler Bauernhof mit frischem Obst und Gemüse.</string>
-
-    <!-- Producer 2: Biohof Schmidt -->
-    <string name="biohof_schmidt_name">Biohof Schmidt</string>
-    <string name="biohof_schmidt_region">Ort/Region: Bern, Schweiz</string>
-    <string name="biohof_schmidt_assortment">Sortiment: Milchprodukte &amp; Eier (Bio)</string>
-    <string name="biohof_schmidt_pickup">Abholzeiten: Di–Sa 09–17 Uhr</string>
-    <string name="biohof_schmidt_about">Über uns: Zertifizierter Biohof mit Milchprodukten und Eiern.</string>
-
-    <!-- Producer 3: Kartoffelhof Meyer -->
-    <string name="kartoffelhof_meyer_name">Kartoffelhof Meyer</string>
-    <string name="kartoffelhof_meyer_region">Ort/Region: Basel, Schweiz</string>
-    <string name="kartoffelhof_meyer_assortment">Sortiment: Kartoffeln &amp; Wurzelgemüse</string>
-    <string name="kartoffelhof_meyer_pickup">Abholzeiten: Do–So 10–16 Uhr</string>
-    <string name="kartoffelhof_meyer_about">Über uns: Kartoffeln, Wurzelgemüse und saisonale Produkte.</string>
-
-    <!-- Unknown Producer -->
-    <string name="unknown_producer_title">Unbekannter Produzent (%1$d)</string>
+    <!-- Unknown Producer (now generic, no hardcoded demo farms) -->
+    <string name="unknown_producer_title">Unbekannter Produzent</string>
     <string name="unknown_producer_region">Ort/Region: —</string>
     <string name="unknown_producer_assortment">Sortiment: —</string>
     <string name="unknown_producer_pickup">Abholzeiten: —</string>
-    <string name="unknown_producer_about">Über uns: Beispieldaten, später aus der Datenbank laden.</string>
+    <string name="unknown_producer_about">Über uns: Noch keine Informationen verfügbar.</string>
 
-    <!-- ProducersAdapter -->
-    <string name="adapter_region_label">Ort/Region: %1$s</string>
-    <string name="adapter_assortment_label">Sortiment: %1$s</string>
-    <string name="adapter_pickup_label">Abholzeiten: %1$s</string>
-    <string name="adapter_unknown_region">Unbekannt</string>
-    <string name="adapter_unknown_assortment">—</string>
-    <string name="adapter_unknown_pickup">—</string>
+    <!-- Products -->
     <string name="products_title">Produkte</string>
+    <string name="unknown_product_name">Unbekanntes Produkt</string>
+    <string name="unknown_product_price">Preis unbekannt</string>
+    <string name="unknown_product_unit">Einheit unbekannt</string>
+    <string name="unknown_product_category">Kategorie unbekannt</string>
+    <string name="unknown_product_description">Keine Beschreibung verfügbar.</string>
 
     <!-- Homepage -->
     <string name="home_banner_title">Direkt vom Feld auf deinen Tisch</string>
@@ -61,5 +41,4 @@
 
     <string name="home_stat_regional_value">100%</string>
     <string name="home_stat_regional_label">Regional</string>
-
 </resources>
