@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Only seed sample auth users + profiles
-        seedSampleUsers();
+        // seedSampleUsers();
 
         // Show Home on first start
         if (savedInstanceState == null) {
