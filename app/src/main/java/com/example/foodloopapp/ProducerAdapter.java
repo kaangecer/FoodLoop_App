@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,13 +38,15 @@ public class ProducerAdapter extends RecyclerView.Adapter<ProducerAdapter.VH> {
     static class VH extends RecyclerView.ViewHolder {
         TextView title;
         TextView city;
-        View root;
+        TextView assortment;
+        TextView categoryTag;
 
-        VH(@NonNull View itemView) {
+        VH(View itemView) {
             super(itemView);
-            root = itemView;
             title = itemView.findViewById(R.id.producer_title);
-            city = itemView.findViewById(R.id.producer_region); // or a dedicated city TextView
+            city = itemView.findViewById(R.id.producer_region);
+            assortment = itemView.findViewById(R.id.producer_assortment);
+            categoryTag = itemView.findViewById(R.id.producer_category_tag);
         }
     }
 
@@ -60,9 +64,18 @@ public class ProducerAdapter extends RecyclerView.Adapter<ProducerAdapter.VH> {
 
         holder.title.setText(p.getName());
         holder.city.setText(p.getCity());
+        holder.assortment.setText(p.getDescription()); // or a short field
 
-        holder.root.setOnClickListener(v -> {
-            if (listener != null && p.getId() != null) {
+        String cat = p.getCategoryFocus();
+        if (cat != null && !cat.isEmpty()) {
+            holder.categoryTag.setText(cat);
+            holder.categoryTag.setVisibility(View.VISIBLE);
+        } else {
+            holder.categoryTag.setVisibility(View.GONE);
+        }
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
                 listener.onOpenProfile(p.getId());
             }
         });
