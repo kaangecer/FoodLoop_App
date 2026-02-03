@@ -12,6 +12,7 @@ public class Producer {
     private String imageUrl;     // farm logo or photo
     private String websiteUrl;   // optional
     private String phone;        // optional contact
+    private String categoryFocus; //"Vegetables", "Dairy", "Meats"
 
     // Required empty constructor for Firestore
     public Producer() {}
@@ -40,6 +41,7 @@ public class Producer {
     public void setId(String id) { this.id = id; }
 
     public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
     public String getCity() { return city; }
     public String getAddress() { return address; }
     public double getLat() { return lat; }
@@ -49,7 +51,7 @@ public class Producer {
     public String getWebsiteUrl() { return websiteUrl; }
     public String getPhone() { return phone; }
 
-    public void setName(String name) { this.name = name; }
+
     public void setCity(String city) { this.city = city; }
     public void setAddress(String address) { this.address = address; }
     public void setLat(double lat) { this.lat = lat; }
@@ -58,4 +60,9 @@ public class Producer {
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public void setWebsiteUrl(String websiteUrl) { this.websiteUrl = websiteUrl; }
     public void setPhone(String phone) { this.phone = phone; }
+    public String getCategoryFocus () {return categoryFocus; }
+
+    public void setCategoryFocus(String categoryFocus) {
+        this.categoryFocus = categoryFocus;
+    }
 }
