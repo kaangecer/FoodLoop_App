@@ -52,23 +52,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add markers for producers
-        for (Producer p : producers) {
-            LatLng pos = new LatLng(p.getLat(), p.getLng());
-            Marker marker = mMap.addMarker(new MarkerOptions()
-                    .position(pos)
-                    .title(p.getName()));
-            if (marker != null) {
-                marker.setTag(p.getId()); // store producer id
-            }
-        }
-
-        // Move camera to first producer
-        if (!producers.isEmpty()) {
-            Producer first = producers.get(0);
-            LatLng pos = new LatLng(first.getLat(), first.getLng());
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(pos, 10f));
-        }
+        addMarkers();
 
         mMap.setOnMarkerClickListener(marker -> {
             Object tag = marker.getTag();
@@ -86,11 +70,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private void loadDummyProducers() {
-        producers.clear();
-        producers.add(new Producer(1L, "Hof Müller", 52.5200, 13.4050));
-        producers.add(new Producer(2L, "Biohof Schmidt", 52.4500, 13.3000));
-        producers.add(new Producer(3L, "Kartoffelhof Meyer", 52.5500, 13.3500));
+    private void loadProducersFromFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("producers")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    producers.clear();
+                    for (QueryDocumentSnapshot doc : snapshot) {
+                        Producer p = doc.toObject(Producer.class);
+                        p.setId(doc.getId());
+                        producers.add(p);
+                    }
+
+                    if (mMap != null) {
+                        addMarkers();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // TODO: log / Toast if you like
+                });
     }
     private void addMarkers() {
         if (mMap == null) return;
