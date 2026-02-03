@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class ProducerProfileFragment extends Fragment {
 
     private static final String ARG_PRODUCER_ID = "producer_id";
