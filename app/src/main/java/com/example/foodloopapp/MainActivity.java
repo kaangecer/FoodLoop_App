@@ -1,11 +1,20 @@
 package com.example.foodloopapp;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             if (id == R.id.nav_home) {
                 selected = new HomeFragment();
             } else if (id == R.id.nav_products) {
-                selected = new ProductsFragment();
+                selected = new ProductFragment();
             } else if (id == R.id.nav_producers) {
                 selected = new ProducerFragment();
             } else if (id == R.id.nav_maps) {
