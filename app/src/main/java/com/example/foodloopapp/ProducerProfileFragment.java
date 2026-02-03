@@ -1,5 +1,6 @@
 package com.example.foodloopapp;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,6 +25,7 @@ public class ProducerProfileFragment extends Fragment {
         return fragment;
     }
 
+    @SuppressLint("StringFormatMatches")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -42,32 +45,47 @@ public class ProducerProfileFragment extends Fragment {
         TextView pickup = view.findViewById(R.id.producer_profile_pickup);
         TextView about = view.findViewById(R.id.producer_profile_about);
 
-        if (producerId == 1L) {
-            title.setText(R.string.hof_mueller_name);
-            region.setText(R.string.hof_mueller_region);
-            assortment.setText(R.string.hof_mueller_assortment);
-            pickup.setText(R.string.hof_mueller_pickup);
-            about.setText(R.string.hof_mueller_about);
-        } else if (producerId == 2L) {
-            title.setText(R.string.biohof_schmidt_name);
-            region.setText(R.string.biohof_schmidt_region);
-            assortment.setText(R.string.biohof_schmidt_assortment);
-            pickup.setText(R.string.biohof_schmidt_pickup);
-            about.setText(R.string.biohof_schmidt_about);
-        } else if (producerId == 3L) {
-            title.setText(R.string.kartoffelhof_meyer_name);
-            region.setText(R.string.kartoffelhof_meyer_region);
-            assortment.setText(R.string.kartoffelhof_meyer_assortment);
-            pickup.setText(R.string.kartoffelhof_meyer_pickup);
-            about.setText(R.string.kartoffelhof_meyer_about);
-        } else {
-            title.setText(getString(R.string.unknown_producer_title, producerId));
+        if (producerId != null) {
+            loadProducer(producerId, title, region, assortment, pickup, about);
+        }  else {
+            title.setText(getString(R.string.unknown_producer_title));
             region.setText(R.string.unknown_producer_region);
             assortment.setText(R.string.unknown_producer_assortment);
             pickup.setText(R.string.unknown_producer_pickup);
             about.setText(R.string.unknown_producer_about);
         }
-
         return view;
     }
+    private void loadProducer(String producerId,
+                              TextView title,
+                              TextView region,
+                              TextView assortment,
+                              TextView pickup,
+                              TextView about) {
+        if (producerId == null) {
+            title.setText(getString(R.string.unknown_producer_title));
+            region.setText(R.string.unknown_producer_region);
+            assortment.setText(R.string.unknown_producer_assortment);
+            pickup.setText(R.string.unknown_producer_pickup);
+            about.setText(R.string.unknown_producer_about);
+            return;
+        }
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("producers")
+                .document(producerId)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        Producer p = doc.toObject(Producer.class);
+                        if (p!= null) {
+                            title.setText(p.getName());
+                            region.setText(p.getCity());
+                        } else title.setText(getString(R.string.unknown_producer_title));
+                    } else {
+                        title.setText(getString(R.string.unknown_producer_title));
+                    }
+                });
+    }
+
 }
