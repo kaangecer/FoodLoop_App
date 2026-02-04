@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:orientation="vertical"
+    android:padding="16dp">
+
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Cart screen" />
-</FrameLayout>
+        android:text="Warenkorb"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:paddingBottom="12dp"/>
+
+    <TextView
+        android:id="@+id/tvCartEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dein Warenkorb ist leer."
+        android:visibility="gone"
+        android:padding="12dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <TextView
+        android:id="@+id/tvCartTotal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Summe: 0,00 €"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingTop="12dp" />
+
+</LinearLayout>
