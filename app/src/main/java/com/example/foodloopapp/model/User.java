@@ -18,6 +18,7 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    // Getters
     public String getUid() {
         return uid;
     }
@@ -32,5 +33,22 @@ public class User {
 
     public long getCreatedAt() {
         return createdAt;
+    }
+
+    // Setters - Required for Firestore toObject() to populate fields
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 }
