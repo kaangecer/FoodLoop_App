@@ -6,23 +6,22 @@
         android:title="Home" />
 
     <item
-        android:id="@+id/nav_products"
+        android:id="@+id/nav_explore"
         android:icon="@drawable/ic_products"
-        android:title="Products" />
-
-    <item
-        android:id="@+id/nav_producers"
-        android:icon="@drawable/ic_producers"
-        android:title="Producers" />
+        android:title="Entdecken" />
 
     <item
         android:id="@+id/nav_maps"
         android:icon="@drawable/ic_maps"
-        android:title="Maps" />
-
+        android:title="Karte" />
 
     <item
         android:id="@+id/nav_cart"
         android:icon="@drawable/ic_cart"
-        android:title="Cart" />
+        android:title="Korb" />
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_producers"
+        android:title="Profil" />
 </menu>

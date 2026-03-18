@@ -88,7 +88,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // TODO: log / Toast if you like
                 });
     }
     private void addMarkers() {

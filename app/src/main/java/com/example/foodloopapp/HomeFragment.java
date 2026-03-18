@@ -22,15 +22,13 @@ public class HomeFragment extends Fragment {
         Button btnBrowse = view.findViewById(R.id.btnBrowseProducts);
         Button btnLogin  = view.findViewById(R.id.btnLogin);
 
+        // Updated to use nav_explore instead of nav_products
         btnBrowse.setOnClickListener(v ->
-                ((MainActivity) requireActivity()).navigateTo(R.id.nav_products));
+                ((MainActivity) requireActivity()).navigateTo(R.id.nav_explore));
 
         btnLogin.setOnClickListener(v -> {
-            ((MainActivity)  requireActivity())
-                    .getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, new LoginFragment())
-                    .commit();
+            // Navigate to Profile tab instead of just replacing the fragment
+            ((MainActivity) requireActivity()).navigateTo(R.id.nav_profile);
         });
 
         return view;
