@@ -6,6 +6,7 @@ public class User {
     private String email;
     private String fullName;
     private long createdAt;   // epoch millis
+    private boolean isProducer;
 
     // Required empty constructor for Firestore
     public User() {
@@ -16,8 +17,18 @@ public class User {
         this.email = email;
         this.fullName = fullName;
         this.createdAt = createdAt;
+        this.isProducer = false;
     }
 
+    public User(String uid, String email, String fullName, long createdAt, boolean isProducer) {
+        this.uid = uid;
+        this.email = email;
+        this.fullName = fullName;
+        this.createdAt = createdAt;
+        this.isProducer = isProducer;
+    }
+
+    // Getters
     public String getUid() {
         return uid;
     }
@@ -32,5 +43,30 @@ public class User {
 
     public long getCreatedAt() {
         return createdAt;
+    }
+
+    public boolean isProducer() {
+        return isProducer;
+    }
+
+    // Setters - Required for Firestore toObject() to populate fields
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setProducer(boolean producer) {
+        isProducer = producer;
     }
 }

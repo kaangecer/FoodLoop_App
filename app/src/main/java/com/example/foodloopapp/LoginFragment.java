@@ -15,15 +15,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.foodloopapp.model.User;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginFragment extends Fragment {
 
@@ -39,7 +40,7 @@ public class LoginFragment extends Fragment {
     private TextView txtNewAccountInfo;
     private MaterialButton btnSignUp;
 
-    // Inline sign-up section (between email and Continue)
+    // Inline sign-up section
     private LinearLayout containerSignUpDetails;
     private TextInputLayout inputLayoutName;
     private TextInputEditText edtName;
@@ -47,6 +48,7 @@ public class LoginFragment extends Fragment {
     private TextInputEditText edtSignUpPassword;
     private TextInputLayout inputLayoutSignUpPasswordConfirm;
     private TextInputEditText edtSignUpPasswordConfirm;
+    private SwitchMaterial switchIsProducer;
     private MaterialButton btnConfirmSignUp;
 
     private MaterialButton btnGoogle;
@@ -90,6 +92,7 @@ public class LoginFragment extends Fragment {
         edtSignUpPassword = view.findViewById(R.id.edtSignUpPassword);
         inputLayoutSignUpPasswordConfirm = view.findViewById(R.id.inputLayoutSignUpPasswordConfirm);
         edtSignUpPasswordConfirm = view.findViewById(R.id.edtSignUpPasswordConfirm);
+        switchIsProducer = view.findViewById(R.id.switchIsProducer);
         btnConfirmSignUp = view.findViewById(R.id.btnConfirmSignUp);
 
         btnGoogle = view.findViewById(R.id.btnGoogle);
@@ -106,7 +109,6 @@ public class LoginFragment extends Fragment {
         btnGoogle.setOnClickListener(v -> handleGoogle());
     }
 
-    // Step 1: user taps "Continue" after entering email
     private void handleContinueWithEmail() {
         String email = edtEmail.getText() != null ? edtEmail.getText().toString().trim() : "";
 
@@ -117,7 +119,6 @@ public class LoginFragment extends Fragment {
             inputLayoutEmail.setError(null);
         }
 
-        // Check if this email already has a Firebase account
         auth.fetchSignInMethodsForEmail(email)
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
@@ -141,144 +142,66 @@ public class LoginFragment extends Fragment {
         return !TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
-    /**
-     * Show password login or sign up CTA depending on whether this is an existing user.
-     */
     private void showStep2(boolean existingUser) {
         containerStep2.setVisibility(View.VISIBLE);
-        containerSignUpDetails.setVisibility(View.GONE); // hidden until user taps "Sign up"
+        containerSignUpDetails.setVisibility(View.GONE);
 
         if (existingUser) {
-            // Show password login UI
             inputLayoutPassword.setVisibility(View.VISIBLE);
             txtForgotPassword.setVisibility(View.VISIBLE);
             btnLogin.setVisibility(View.VISIBLE);
-
-            // Hide signup-only bits
             txtNewAccountInfo.setVisibility(View.GONE);
             btnSignUp.setVisibility(View.GONE);
-
-            Toast.makeText(getContext(),
-                    "Welcome back! Please enter your password.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Welcome back!", Toast.LENGTH_SHORT).show();
         } else {
-            // Hide password login bits
             inputLayoutPassword.setVisibility(View.GONE);
             txtForgotPassword.setVisibility(View.GONE);
             btnLogin.setVisibility(View.GONE);
-
-            // Show signup UI CTA
             txtNewAccountInfo.setVisibility(View.VISIBLE);
             btnSignUp.setVisibility(View.VISIBLE);
-
-            Toast.makeText(getContext(),
-                    "New here? Let's create your account.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "New here? Let's create your account.", Toast.LENGTH_SHORT).show();
         }
     }
 
-    // Existing user logs in
     private void handleLogin() {
         String email = edtEmail.getText() != null ? edtEmail.getText().toString().trim() : "";
         String password = edtPassword.getText() != null ? edtPassword.getText().toString() : "";
 
-        if (!isValidEmail(email)) {
-            inputLayoutEmail.setError("Invalid email");
-            return;
-        } else {
-            inputLayoutEmail.setError(null);
-        }
-
         if (TextUtils.isEmpty(password)) {
             inputLayoutPassword.setError("Password required");
             return;
-        } else {
-            inputLayoutPassword.setError(null);
         }
 
         btnLogin.setEnabled(false);
-
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     btnLogin.setEnabled(true);
-
                     if (!task.isSuccessful()) {
-                        Toast.makeText(getContext(),
-                                "Login failed: " +
-                                        (task.getException() != null ? task.getException().getMessage() : ""),
+                        Toast.makeText(getContext(), "Login failed: " +
+                                (task.getException() != null ? task.getException().getMessage() : ""),
                                 Toast.LENGTH_LONG).show();
                         return;
                     }
-
-                    Toast.makeText(getContext(),
-                            "Logged in!",
-                            Toast.LENGTH_SHORT).show();
-
                     goToHome();
                 });
     }
 
-    // User taps "Sign up" CTA under step 2
     private void handleSignUp() {
-        String email = edtEmail.getText() != null ? edtEmail.getText().toString().trim() : "";
-
-        if (!isValidEmail(email)) {
-            inputLayoutEmail.setError("Invalid email");
-            return;
-        } else {
-            inputLayoutEmail.setError(null);
-        }
-
-        // Show inline sign-up fields between email and Continue
         containerSignUpDetails.setVisibility(View.VISIBLE);
-
-        // Optional: hide password login bits to keep UI clean
         inputLayoutPassword.setVisibility(View.GONE);
         txtForgotPassword.setVisibility(View.GONE);
         btnLogin.setVisibility(View.GONE);
     }
 
-    // User taps "Create account"
     private void handleConfirmSignUp() {
         String email = edtEmail.getText() != null ? edtEmail.getText().toString().trim() : "";
         String name = edtName.getText() != null ? edtName.getText().toString().trim() : "";
         String password = edtSignUpPassword.getText() != null ? edtSignUpPassword.getText().toString() : "";
         String passwordConfirm = edtSignUpPasswordConfirm.getText() != null ? edtSignUpPasswordConfirm.getText().toString() : "";
+        boolean isProducer = switchIsProducer.isChecked();
 
-        boolean hasError = false;
-
-        if (!isValidEmail(email)) {
-            inputLayoutEmail.setError("Invalid email");
-            hasError = true;
-        } else {
-            inputLayoutEmail.setError(null);
-        }
-
-        if (TextUtils.isEmpty(name)) {
-            inputLayoutName.setError("Name required");
-            hasError = true;
-        } else {
-            inputLayoutName.setError(null);
-        }
-
-        if (TextUtils.isEmpty(password)) {
-            inputLayoutSignUpPassword.setError("Password required");
-            hasError = true;
-        } else {
-            inputLayoutSignUpPassword.setError(null);
-        }
-
-        if (TextUtils.isEmpty(passwordConfirm)) {
-            inputLayoutSignUpPasswordConfirm.setError("Please confirm password");
-            hasError = true;
-        } else if (!password.equals(passwordConfirm)) {
-            inputLayoutSignUpPasswordConfirm.setError("Passwords do not match");
-            hasError = true;
-        } else {
-            inputLayoutSignUpPasswordConfirm.setError(null);
-        }
-
-        if (hasError) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(password) || !password.equals(passwordConfirm)) {
+            Toast.makeText(getContext(), "Please check your inputs", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -289,78 +212,67 @@ public class LoginFragment extends Fragment {
                     btnConfirmSignUp.setEnabled(true);
 
                     if (!task.isSuccessful() || task.getResult() == null) {
-                        Toast.makeText(getContext(),
-                                "Sign-up failed: " +
-                                        (task.getException() != null ? task.getException().getMessage() : ""),
-                                Toast.LENGTH_LONG).show();
+                        String error = (task.getException() != null ? task.getException().getMessage() : "Unknown error");
+                        if (error != null && error.contains("email address is already in use")) {
+                            Toast.makeText(getContext(), "Email already registered.", Toast.LENGTH_LONG).show();
+                            showStep2(true);
+                        } else {
+                            Toast.makeText(getContext(), "Sign-up failed: " + error, Toast.LENGTH_LONG).show();
+                        }
                         return;
                     }
 
                     FirebaseUser firebaseUser = task.getResult().getUser();
-                    if (firebaseUser == null) {
-                        Toast.makeText(getContext(),
-                                "Sign-up failed: no user returned",
-                                Toast.LENGTH_LONG).show();
-                        return;
-                    }
+                    if (firebaseUser == null) return;
 
                     String uid = firebaseUser.getUid();
-                    long now = System.currentTimeMillis();
+                    User user = new User(uid, email, name, System.currentTimeMillis(), isProducer);
 
-                    User user = new User(uid, email, name, now);
-
-                    db.collection("users")
-                            .document(uid)
-                            .set(user)
+                    // 1. Save to "users"
+                    db.collection("users").document(uid).set(user)
                             .addOnSuccessListener(aVoid -> {
-                                Toast.makeText(getContext(),
-                                        "Account created!",
-                                        Toast.LENGTH_SHORT).show();
-                                goToHome();
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(getContext(),
-                                        "Profile save failed: " + e.getMessage(),
-                                        Toast.LENGTH_LONG).show();
+                                // 2. If producer, also save to "producers"
+                                if (isProducer) {
+                                    Map<String, Object> producerData = new HashMap<>();
+                                    producerData.put("id", uid); // Explizite ID für Producer-Klasse
+                                    producerData.put("name", name);
+                                    producerData.put("email", email);
+                                    producerData.put("userId", uid);
+                                    producerData.put("description", "New FoodLoop Producer");
+
+                                    db.collection("producers").document(uid).set(producerData)
+                                            .addOnSuccessListener(v -> {
+                                                Toast.makeText(getContext(), "Producer account created!", Toast.LENGTH_SHORT).show();
+                                                goToHome();
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Toast.makeText(getContext(), "User created, but producer entry failed.", Toast.LENGTH_SHORT).show();
+                                                goToHome();
+                                            });
+                                } else {
+                                    Toast.makeText(getContext(), "Account created!", Toast.LENGTH_SHORT).show();
+                                    goToHome();
+                                }
                             });
                 });
     }
 
     private void handleForgotPassword() {
         String email = edtEmail.getText() != null ? edtEmail.getText().toString().trim() : "";
-
-        if (!isValidEmail(email)) {
-            Toast.makeText(getContext(),
-                    "Enter a valid email first",
-                    Toast.LENGTH_SHORT).show();
-            return;
+        if (isValidEmail(email)) {
+            auth.sendPasswordResetEmail(email).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) Toast.makeText(getContext(), "Reset link sent.", Toast.LENGTH_SHORT).show();
+            });
         }
-
-        auth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(getContext(),
-                                "Reset link sent to " + email,
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(),
-                                "Failed to send reset link.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     private void handleGoogle() {
-        // TODO: plug in your Google sign-in here
-        Toast.makeText(getContext(),
-                "Google sign-in not implemented yet",
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Google sign-in not implemented yet", Toast.LENGTH_SHORT).show();
     }
 
     private void goToHome() {
         if (getActivity() instanceof MainActivity) {
-            MainActivity main = (MainActivity) getActivity();
-            main.navigateTo(R.id.nav_home);
+            ((MainActivity) getActivity()).navigateTo(R.id.nav_home);
         }
     }
 }
